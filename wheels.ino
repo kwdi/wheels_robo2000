@@ -5,6 +5,8 @@ Encoder E1(2, 3); //UpRight
 Encoder E2(18, 19); //UPLeft
 
 const int Speed = 180;
+int Trans = 0; //transmission value
+const int t = 900; //Time the robot spends turning (miliseconds) (turntime)
 
 
 int DirectionPin1 = 50; //direction of rotation of the right wheel (forward HIGH, LOW back) 
@@ -20,10 +22,10 @@ int enablePin2 = 49;
 void setup()
 {
   Wire.begin(2);        // join i2c bus
-  Wire.onReceive(receiveEvent); // register event
+    Wire.onReceive(receiveEvent); // register event
 
   Serial.begin(9600);
-  
+
   pinMode(DirectionPin1, OUTPUT); //direction of rotation of the right wheel 
   pinMode(DirectionPin2, OUTPUT); //direction of rotation of the left wheel 
   pinMode(ShutPin1, OUTPUT);
@@ -76,17 +78,39 @@ void stopmove(){
   analogWrite(PwmPin2, 0);
 }  
 
-void receiveEvent(int howMany)
-{
-  while(1 < Wire.available()) // loop through all but the last
+void receiveEvent(int bytes)
+{ 
+  char command;
+  if(Wire.available() != 0)
   {
-    char c = Wire.read(); // receive byte as a character
-    Serial.print(c);         // print the character
+    
+      command = Wire.read();
+      Serial.print("Received: ");
+      Serial.println(command);
+
+    switch (command){
+      case 'go':
+        go();
+        break;
+      case 'stop':
+        stopmove();
+        break;
+      case 'turnL':
+        turnleft(t);
+        break;
+      case 'TurnR':
+        turnright(t);
+        break;      
+    }
   }
-  int x = Wire.read();    // receive byte as an integer
-  Serial.println(x);         // print the integer
+
+  
 }
-void loop()
-{
+
+
+
+void loop(){
+
   delay(100);
+
 }
