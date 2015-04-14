@@ -14,7 +14,7 @@ const int t = 900; //Time the robot spends turning (miliseconds) (turntime)
 int DirectionPin1 = 40; //direction of rotation of the right wheel (forward HIGH, LOW back) 
 int DirectionPin2 = 44; //direction of the left wheel (forward HIGH, LOW back)
 int PwmPin1 = 5; //right wheel speed with PWM 
-int PwmPin2 = 4; //left wheel speed with PWM
+int PwmPin2 = 7; //left wheel speed with PWM
 int ShutPin1 = 22; 
 int ShutPin2 = 26; 
 int enablePin1 = 32; 
@@ -119,11 +119,6 @@ void receiveEvent(int bytes)
 
 
 void loop(){
-  //go();
-  //delay(800);
-  /*turnright(t);
-  delay(400);
-  turnleft(t);
-  delay(400);
-  backwards();*/
+  
+
 }
