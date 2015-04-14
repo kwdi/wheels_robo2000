@@ -4,30 +4,32 @@
 Encoder E1(2, 3); //UpRight
 Encoder E2(18, 19); //UPLeft
 
+//byte x = 0;
+
 const int Speed = 180;
 int Trans = 0; //transmission value
 const int t = 900; //Time the robot spends turning (miliseconds) (turntime)
 
 
-int DirectionPin1 = 50; //direction of rotation of the right wheel (forward HIGH, LOW back) 
-int DirectionPin2 = 51; //direction of the left wheel (forward HIGH, LOW back)
+int DirectionPin1 = 40; //direction of rotation of the right wheel (forward HIGH, LOW back) 
+int DirectionPin2 = 44; //direction of the left wheel (forward HIGH, LOW back)
 int PwmPin1 = 5; //right wheel speed with PWM 
 int PwmPin2 = 4; //left wheel speed with PWM
-int ShutPin1 = 52; 
-int ShutPin2 = 53; 
-int enablePin1 = 48; 
-int enablePin2 = 49; 
+int ShutPin1 = 22; 
+int ShutPin2 = 26; 
+int enablePin1 = 32; 
+int enablePin2 = 36; 
 
 
 void setup()
 {
-  Wire.begin(2);        // join i2c bus
-    Wire.onReceive(receiveEvent); // register event
+  Wire.begin(5);        // join i2c bus
+  Wire.onReceive(receiveEvent); // register event 
 
   Serial.begin(9600);
 
-  pinMode(DirectionPin1, OUTPUT); //direction of rotation of the right wheel 
-  pinMode(DirectionPin2, OUTPUT); //direction of rotation of the left wheel 
+  pinMode(DirectionPin1, OUTPUT); //direction of rotation of the LEFT wheel 
+  pinMode(DirectionPin2, OUTPUT); //direction of rotation of the RIGHT wheel 
   pinMode(ShutPin1, OUTPUT);
   pinMode(PwmPin1, OUTPUT);
   pinMode(enablePin1, OUTPUT);
@@ -45,9 +47,9 @@ void setup()
 
 void go(){
   digitalWrite(DirectionPin1, HIGH);
-  analogWrite(PwmPin1, Speed);                              
+  analogWrite(PwmPin1, Speed);                     
   digitalWrite(DirectionPin2, HIGH); 
-  analogWrite(PwmPin2, Speed); 
+  analogWrite(PwmPin2, Speed);
 }
 
 void backwards(){
@@ -80,37 +82,48 @@ void stopmove(){
 
 void receiveEvent(int bytes)
 { 
-  char command;
+  int x;
   if(Wire.available() != 0)
   {
-    
-      command = Wire.read();
+      x = Wire.read();
       Serial.print("Received: ");
-      Serial.println(command);
+      Serial.println(x);
 
-    switch (command){
-      case 'go':
+  } 
+
+    if(x==1){
+      Serial.println("1");
         go();
-        break;
-      case 'stop':
-        stopmove();
-        break;
-      case 'turnL':
+    } 
+    else if(x==2){
+      Serial.println("2");
+        backwards();
+    } 
+    else if(x==3){
+      Serial.println("3");
         turnleft(t);
-        break;
-      case 'TurnR':
-        turnright(t);
-        break;      
     }
-  }
+    else if(x==4){
+      Serial.println("4");
+        turnright(t);
+    }
+    else {
+      Serial.println("else");
+      stopmove();
+    }
+
 
   
-}
+} 
 
 
 
 void loop(){
-
-  delay(100);
-
+  //go();
+  //delay(800);
+  /*turnright(t);
+  delay(400);
+  turnleft(t);
+  delay(400);
+  backwards();*/
 }
